@@ -1,30 +1,19 @@
-#!venv/bin/python
+#!/usr/bin/python
 import sys
 import os
-from encrypter import encrypt_file as ef
+import Utils
+from initializer import App
+
+app = App()
 
 def help():
     print("eu usage:")
     print("eu init - to initialize current directory as encrypt upload repository")
     print()
 
-def call(arg, cb, key=False):
-    index = 1
-    if sys.argv[index] == arg :
-        if key == True:
-            print(sys.argv)
-            key_val = input("Enter the key")
-            cb(key_val, ",".join(sys.argv[index + 1: ]))
-        else:
-            cb(sys.argv[index + 1:])
-        sys.exit(0)
-
-
-def initializer():
-    os.makedirs(".eu")
-
-def check_if_eu_dir():
-    return os.path.exists(".eu")
+def call(command, other_args):
+    getattr(app, command)(other_args)
+    sys.exit(0)
 
 def args_decision_maker(argv):
     opts = {}  # Empty dictionary to store key-value pairs.
@@ -34,17 +23,17 @@ def args_decision_maker(argv):
         return
 
     index = 1
-    if argv[index] == "init":
-        initializer()
+    command = argv[index]
+    if command == "init":
+        getattr(app, command)()
+
     else:
-        if check_if_eu_dir():
-
-            call("encrypt", ef, key=True)
-
+        if app.check_if_eu_dir():
+            other_args = argv[index + 1:]
+            call(command, other_args)
         else:
             sys.stderr.write("not a eu repository")
             sys.exit(1)
-
 
 if __name__ == '__main__':
     myargs = args_decision_maker(sys.argv)

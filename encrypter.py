@@ -2,7 +2,9 @@ import hashlib
 import os, random, struct
 from Crypto.Cipher import AES
 
-def encrypt_file(key, *in_filenames):
+ENCRYPTION_BASE_DIR = ".eu/data/"
+
+def encrypt_file(key, in_filenames):
     """ Encrypts a file using AES (CBC mode) with the
         given key.
 
@@ -27,7 +29,7 @@ def encrypt_file(key, *in_filenames):
     key = hashlib.sha256(key.encode("utf-8")).digest()
 
     for in_filename in in_filenames:
-        out_filename = in_filename + '.enc'
+        out_filename = ENCRYPTION_BASE_DIR + in_filename + '.enc'
 
         iv = ''.join(chr(random.randint(0, 0xFF)) for i in range(16))
 
@@ -47,3 +49,8 @@ def encrypt_file(key, *in_filenames):
                         chunk += ' ' * (16 - len(chunk) % 16)
 
                     outfile.write(encryptor.encrypt(chunk))
+
+
+
+if __name__ == "__main__":
+    encrypt_file("test", "kulwant")
