@@ -4,7 +4,7 @@ import os
 import Utils
 from initializer import App
 
-app = App()
+app = App(os.getcwd())
 
 def help():
     print("eu usage:")
