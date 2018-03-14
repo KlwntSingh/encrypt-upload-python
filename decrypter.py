@@ -3,7 +3,7 @@ import os, random, struct
 from Crypto.Cipher import AES
 
 
-def decrypt_file(key, in_filenames):
+def decrypt_file(key, in_filename, out_filename):
     """ Decrypts a file using AES (CBC mode) with the
         given key. Parameters are similar to encrypt_file,
         with one difference: out_filename, if not supplied
@@ -14,19 +14,16 @@ def decrypt_file(key, in_filenames):
     chunksize = 64 * 1024
     key = hashlib.sha256(key.encode("utf-8")).digest()
 
-    for in_filename in in_filenames:
-        out_filename = "data/" + "/".join(in_filename.split("/")[2:])[:-4]
+    with open(in_filename, 'rb') as infile:
+        origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
+        iv = infile.read(16)
+        decryptor = AES.new(key, AES.MODE_CBC, iv)
 
-        with open(in_filename, 'rb') as infile:
-            origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
-            iv = infile.read(16)
-            decryptor = AES.new(key, AES.MODE_CBC, iv)
+        with open(out_filename, 'wb') as outfile:
+            while True:
+                chunk = infile.read(chunksize)
+                if len(chunk) == 0:
+                    break
+                outfile.write(decryptor.decrypt(chunk))
 
-            with open(out_filename, 'wb') as outfile:
-                while True:
-                    chunk = infile.read(chunksize)
-                    if len(chunk) == 0:
-                        break
-                    outfile.write(decryptor.decrypt(chunk))
-
-                outfile.truncate(origsize)
+            outfile.truncate(origsize)
