@@ -1,4 +1,5 @@
 import os
+import shutil
 
 def make_nested_directories(directories_to_make):
     for directory in directories_to_make:
@@ -8,10 +9,10 @@ def make_nested_directories(directories_to_make):
             make_deep_directory_path(final_path)
 
 def remove_ending_slash(path):
-    return path if path[-1] != "/" else path[:-1]
+    return path if path[-1:] != "/" else path[:-1]
 
 def remove_starting_slash(path):
-    return path if path[0] != "/" else path[1:]
+    return path if path[0:1] != "/" else path[1:]
 
 def remove_surrounding_slashes(path):
     return remove_ending_slash(remove_starting_slash(path))
@@ -29,13 +30,14 @@ def get_all_files_in_paths(paths):
     final_list_of_finals = []
     
     for path in paths:
-        list_of_directory_path = os.listdir(path)
-        for file in list_of_directory_path:
-            file_path = path + "/" + file
-            if(check_if_file(file_path)):
-                final_list_of_finals.append(file_path)
-            else:
-                final_list_of_finals += get_all_files_in_paths([file_path])
+        if os.path.isfile(path):
+            final_list_of_finals.append(path)
+        else:
+            list_of_directory_path = os.listdir(path)
+            for index, file in enumerate(list_of_directory_path):
+                file_path = path + "/" + file
+                list_of_directory_path[index] = file_path
+            final_list_of_finals += get_all_files_in_paths(list_of_directory_path)
 
     return final_list_of_finals
 
@@ -69,6 +71,9 @@ def check_for_existence(path):
 
 def delete_file(file):
     os.remove(file)
+
+def remove_dir(fold):
+    shutil.rmtree(fold)
 
 # makeAllNestedDirectories(".eu", getAllNestedDirectories("kulwant"))
 # print(filteredPath("///"))
