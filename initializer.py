@@ -10,6 +10,7 @@ import compressor
 class App():
 
     def __init__(self, base_path):
+        self.command_without_eu_dir = ['init', 'unzip']
         self.BASE_PATH = Utils.remove_ending_slash(base_path)
         self.EU_FOLDER_NAME = ".eu"
         self.ENCRYPTED_DATA_FOLDER_NAME = "/data"
@@ -33,7 +34,7 @@ class App():
     def exit_from_app(self, msg):
         sys.exit(1)
 
-    def initializer(self):
+    def initializer(self, other):
         if not os.path.exists(self.REPO_FOLDER):
             os.makedirs(self.REPO_FOLDER)
         else:
@@ -89,6 +90,7 @@ class App():
         return Utils.remove_ending_slash(self.BASE_PATH) + "/" + path_without_repo_data
 
     def check_if_eu_dir(self):
+
         return os.path.exists(self.REPO_FOLDER)
 
     def get_encup_key(self):
@@ -145,7 +147,7 @@ class App():
         all_encrypted_files_folders_in_encrypted_data_folder = map(lambda x: Utils.remove_ending_slash(self.ENCRYPTED_DATA_PATH) + "/" + x, os.listdir(self.ENCRYPTED_DATA_PATH))
         for index, file in enumerate(all_files_folders_inside_encrypted_data_folder):
             if Utils.check_if_file(all_encrypted_files_folders_in_encrypted_data_folder[index]):
-                if Utils.check_if_file(file):
+                if Utils.check_if_file(self.remove_encrypted_extension(file)):
                     Utils.delete_file(self.remove_encrypted_extension(file))
             else:
                 shutil.rmtree(file)

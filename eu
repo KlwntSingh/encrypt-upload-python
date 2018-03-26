@@ -1,0 +1,47 @@
+#!/usr/bin/python
+import sys
+import os
+import Utils
+import config
+from initializer import App
+
+app = App(os.getcwd())
+
+def help():
+    print(config.HELP)
+
+def version():
+    print(config.VERSION)
+
+
+application_command_options = {
+    "-V" : version,
+    "--version" : version,
+    "-h" : help,
+    "--help": help
+}
+
+def call(command, other_args):
+    getattr(app, command)(other_args)
+    sys.exit(0)
+
+def args_decision_maker(argv):
+    opts = {}  # Empty dictionary to store key-value pairs.
+
+    if len(argv) <= 1:
+        help()
+        return
+
+    index = 1
+    command = argv[index]
+    if command in application_command_options:
+        application_command_options[command]()
+    elif command in app.command_without_eu_dir or app.check_if_eu_dir():
+        other_args = argv[index + 1:]
+        call(command, other_args)
+    else:
+        sys.stderr.write("not a eu repository")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    myargs = args_decision_maker(sys.argv)
