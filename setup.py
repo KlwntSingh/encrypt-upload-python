@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-
+import config
 from distutils.core import setup
 
-setup(name='encrypt-upload',
-      version='1.0',
-      description='Encrypt Upload python Application',
-      author='Kulwant Singh',
-      author_email='kulwantbughipura@gmail.com',
-      url='https://github.com/KlwntSingh/encrypt-upload-python',
+setup(name=config.NAME,
+      version=config.VERSION,
+      description=config.DESCRIPTION,
+      author=config.AUTHOR,
+      author_email=config.AUTHOR_EMAIL,
+      url=config.URL,
       packages=['.'],
       scripts=['eu']
      )
