@@ -1,5 +1,6 @@
 NAME="encrypt-upload"
 DESCRIPTION="""Encrypt Upload python Application"""
+LONG_DESCRIPTION="""Encrypt Upload Application in python"""
 AUTHOR="""Kulwant Singh"""
 AUTHOR_EMAIL="""kulwantbughipura@gmail.com"""
 URL="""https://github.com/KlwntSingh/encrypt-upload-python"""
@@ -19,3 +20,4 @@ Application Options:
   unzip	FILE.zip		    Unzip the zipped eu repository.
 """
 VERSION = """1.0.0"""
+LICENSE="""MIT"""
