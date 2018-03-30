@@ -1,6 +1,7 @@
 import sys
 import os
 import shutil
+import getpass
 from random import randint
 import Utils
 from decrypter import decrypt_file as df
@@ -93,8 +94,17 @@ class App():
 
         return os.path.exists(self.REPO_FOLDER)
 
+    def get_password(self, st):
+        return getpass.getpass(st)
+
     def get_encup_key(self):
-        self.key = raw_input("Enter the key: ")
+        self.key = self.get_password("Enter the Key: ")
+
+    def confirm_password(self, key):
+        if key == self.get_password("Confirm the Key: "):
+            return True
+        else:
+            return False
 
     def check_user_input_validity(self, path_for_files_and_folders):
         length = len(path_for_files_and_folders)
@@ -108,6 +118,9 @@ class App():
 
     def encrypt_files(self, path_for_files_and_folders):
         self.get_encup_key()
+        while not self.confirm_password(self.key):
+            print("Does not match. Please enter the Key again!")
+            self.get_encup_key()
 
         abs_path_for_files_and_folders = self.check_user_input_validity(path_for_files_and_folders)
         all_files = Utils.get_all_files_in_paths(abs_path_for_files_and_folders)
